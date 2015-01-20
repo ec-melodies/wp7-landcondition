@@ -1,1 +1,1 @@
-# wp07-lulc-w32
+# wp7-landcondition
