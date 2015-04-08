@@ -1,0 +1,16 @@
+{
+    "contents" : "###############################################\n# NAME: \n# PURPOSE:\n# INPUTS:\n# OUTPUTS:\n# CHANGES: 20/04/2010 - bug en el computo de Lat\n# CHANGES: 20/04/2010 - cambio en el computo de dia\n# CHANGES: 20/04/2010 - quitar valor por defecto de day\n# CHANGES: 23/05/2010 - stop si no es latlong\n# CHANGES: 07/02/2013 - adecuar a sp > 0.9-90 (slot coord no existe)\n# TODO: si no es latlong proyectar a latlong calcular rad y reproyectar a original\n# TODO: Justificar el 898\n# TODO: ampliar para calculo simplificado de la FAO\n###############################################\nsolarRad = function (img, day) {\t\n\t\n\tif (is.projected(img)) stop('Cant calculate extraterrestial radiation over projected images')\n\t\n\tDTOR=0.0174533 #cte de grados a radianes\n\t\n\tnRow=img@grid@cells.dim[2]\n\tnCol=img@grid@cells.dim[1]\n\trowSize=img@grid@cellsize[2]\n\t# CHANGE lowerY=a@coords[3] no funciona a partir de version de sp 0.9-91\n\t# uso coordinates\n\tlowerY=min(coordinates(img)[,2]) #Y del punto central\n\tlat=as.matrix(img)\n\t\n\tlat[1:nCol,]=rep((0:(nRow-1)*rowSize)+lowerY,each=nCol) #imagen donde cada pixel tiene el valor central de su coord Y \n\t\n\tlat=lat*DTOR\n\t\n\tdia=2*pi/365*(day-1)\n\tDST=1.00011+0.034221*cos(dia)+0.00128*sin(dia)+0.000719*cos(2*dia)+0.000777*sin(2*dia)\n\tDEC=0.006918-0.399912*cos(dia)+0.070257*sin(dia)-0.006758*cos(2*dia)+0.000907*sin(2*dia)-0.002697*cos(3*dia)+0.00148*sin(3*dia)\n\tAGH=acos(-tan(lat)*tan(DEC))\n\tRAD=898*DST*(sin(lat)*sin(DEC)*AGH+cos(lat)*cos(DEC)*sin(AGH))\n\t\n\timg$band1=rev(as.vector(RAD))\n\t\n\timg\t\n}\n\n###############################################\n# NAME: \n# PURPOSE:\n# INPUTS:\n# OUTPUTS:\n###############################################\nsolarRad12M = function (img, outFl, ...) {\n\t\n\tif (length(outFl)!=12) stop('Fl must be 12 file names')\n\t\n\t# valor juliano del dia 15 de cada mes\n\t#TODO: comprobarlo\n\tDDA=c(15,45,75,106,136,167,197,228,259,289,320,350)\n\t\n\tfor (i in 1:12) writeGDAL(solarRad(img,DDA[i]),outFl[i],...)\n\toutFl\n}\n",
+    "created" : 1428478090095.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2799772447",
+    "id" : "1412554C",
+    "lastKnownWriteTime" : 1427456103,
+    "path" : "D:/trabajo/Alberto/r2dRue-lib/R/solarRadiation.R",
+    "project_path" : "R/solarRadiation.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

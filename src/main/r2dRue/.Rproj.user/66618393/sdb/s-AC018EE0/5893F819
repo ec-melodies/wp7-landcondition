@@ -1,0 +1,16 @@
+{
+    "contents" : "DiasMes=c(31,28,31,30,31,30,31,31,30,31,30,31)\n\n###############################################\n# NAME: \n# PURPOSE:\n# INPUTS:\n# OUTPUTS:\n###############################################\npetHgsm= function(Tmin, Tmax, Tmed, Rad, month){\n\timg=Tmed\n\timg$band1=0.0023*Rad$band1*0.01708*((Tmax$band1-Tmin$band1)^0.5)*(Tmed$band1+17.8)*DiasMes[month]\n\timg\n}\n\n###############################################\n# NAME: \n# PURPOSE:\n# INPUTS:\n# OUTPUTS:\n# CHANGES: 27/01/2010 - bug en el calculo del indice de Rad (implica reescritura de codigo)\n# CHANGES: 20/04/2010 - cambio de parametro date por monthIni\n###############################################\nbatchPetHgsm= function(outFl,monthIni,Tmin,Tmed,Tmax,Rad,...) {\n\t# comprobacion de los parametros\n\tif (!(monthIni %in% 1:12)) stop('monthIni must be in 1:12')\n\tif (length(Tmax)==length(Tmin) && length(Tmax)==length(Tmed)){\n\t\tmeses=length(Tmax)\n\t}\n\telse stop('Tmax,Tmin,Tmed must be of the same length')\n\t\n\tif (missing(Rad)) {\n\t\taux=readGDAL(Tmax[1])\n\t\tRad=paste('rad',1:12,'.RST',sep='')\n\t\tsolarRad12M(aux,Rad,...)\n\t}\n\t\n\t#DiasMes=c(31,28,31,30,31,30,31,31,30,31,30,31)\t\n\t\n\t#Asignamos mesRad\n\tmesRad=monthIni\n\tfor (i in 1:meses){\n\t\t#Read de los ficheros\n\t\ttx=readGDAL(Tmax[i])\n\t\ttn=readGDAL(Tmin[i])\n\t\ttm=readGDAL(Tmed[i])\n\t\trd=readGDAL(Rad[mesRad])\n\t\t\n\t\t#Calculo Etp mes i\n\t\timg=petHgsm(Tmin=tn,Tmax=tx,Tmed=tm,Rad=rd,month=mesRad)\n\t\t\n\t\twriteGDAL(img, outFl[i],...)\n\t\t\n\t\t#Pasamos al mes siguiente\n\t\tmesRad=mesRad+1\n\t\tif (mesRad>12) mesRad=1\t      \n\t}\n}\n\n",
+    "created" : 1427788816476.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3874839382",
+    "id" : "5893F819",
+    "lastKnownWriteTime" : 1427456103,
+    "path" : "D:/trabajo/Alberto/r2dRue-lib/R/etp.R",
+    "project_path" : "R/etp.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
