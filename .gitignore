@@ -13,3 +13,6 @@ target
 
 # editor bak
 *.bak
+
+# raster files
+*.rst

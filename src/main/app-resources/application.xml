@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<application id="WP7-Application">
+  <jobTemplates>
+    <jobTemplate id="TimeSeries">
+      <streamingExecutable>/application/J1-TimeSeries/run.R</streamingExecutable>
+      <defaultParameters>
+        <parameter id="startYear" title="Start Year" abstract="Start year of de ndvi series" scope="runtime" type="opensearch" target="time:start">2012</parameter>
+        <parameter id="endYear" title="End Year" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>
+      </defaultParameters>
+      <defaultJobconf>
+        <property id="ciop.job.max.tasks">1</property>
+      </defaultJobconf>
+    </jobTemplate>
+    <jobTemplate id="MonthlyRadiations">
+      <streamingExecutable>/application/J2-MonthlyRadiations/run.R</streamingExecutable>
+      <defaultParameters>
+        <parameter id="month" title="month" abstract="" scope="runtime">2012</parameter>
+        <parameter id="bbox" title="End Year" abstract="End datogue" scope="runtime">2014</parameter>
+      </defaultParameters>
+      <defaultJobconf>
+        <property id="mapred.task.timeout">600000000</property>
+        <property id="ciop.job.max.tasks">1</property>
+      </defaultJobconf>
+    </jobTemplate>
+    <jobTemplate id="NdviAnnualSeries">
+      <streamingExecutable>/application/J3-NdviAnnualSeries/run.R</streamingExecutable>
+      <defaultParameters>
+        <parameter id="startYear" title="start year" abstract="S catalogue" scope="runtime">1997</parameter>
+        <parameter id="endYear" title="end year" abstract="ndsat 8 catalogue" scope="runtime">2001</parameter>
+        <parameter id="bbox" title="End Year" abstract="End YEYEYEYEear datlogue" scope="runtime">2014</parameter>
+      </defaultParameters>
+      <defaultJobconf>
+        <property id="mapred.task.timeout">600000000</property>
+        <property id="ciop.job.max.tasks">1</property>
+      </defaultJobconf>
+    </jobTemplate>
+  </jobTemplates>
+  <workflow id="WP7_Debug_Workflow" title="WP7 - Land Condition pruebas" abstract="Prueba del WP7">
+    <workflowVersion>1.0</workflowVersion>
+    <node id="node_TimeSeries">
+      <job id="TimeSeries" />
+      <sources>
+        <source refid="file:urls">/application/inputs/J1-TimeSeries/list</source>
+      </sources>
+    </node>
+    <node id="node_MonthlyRadiations">
+      <job id="MonthlyRadiations" />
+      <sources>
+        <source refid="file:urls">/application/inputs/J1-TimeSeries/list</source>
+      </sources>
+    </node>
+    <node id="node_NdviAnnualSeries">
+      <job id="NdviAnnualSeries" />
+      <sources>
+        <source refid="file:urls">/application/inputs/NDVI/v-m-ndvi.rgf</source>
+      </sources>
+    </node>
+  </workflow>
+</application>

@@ -1,8 +1,8 @@
 #!/usr/bin/Rscript --vanilla --slave
 
 ################## 
-### WP7LC - JOB 3 
-### CALCULATE NDVI ANNUAL SERIES
+### WP7LC - JOB 2 
+### CALCULATE MONTHLY RADIATIONS
 ###
 ### INPUTS    : 
 ### OUTPUTS   :
@@ -28,6 +28,8 @@ if (length(find.package("r2dRue",quiet=TRUE))>0)
 	library("r2dRue")
 }  
 
+# rciop.log("DEBUG",find.package("r2dRue",quiet=TRUE))    
+
 # change working directory
 setwd(TMPDIR)
 
@@ -35,8 +37,6 @@ setwd(TMPDIR)
 
 # populate o with initial values  
 o.pOut <- TMPDIR
-o.yIni<-
-o.yEnd<-
 o.driver <- "GTiff"
 o.flag <- 0
 
@@ -44,29 +44,30 @@ o.flag <- 0
 f <- file("stdin")
 open(f)
 
-while (length(rst.ref <- readLines(f, n=12))>0) {
-	
-	#retrieve local files and copy to TMPDIR
-	rciop.log("INFO", paste("copy local files", rst.ref))
-	res <- rciop.copy(rst.ref, TMPDIR, uncompress=TRUE)
-	if (res$exit.code==0) 
-	{
-		rst.ref <- res$output
-		rciop.log("INFO", "Copied files.")  
-	}	else {rciop.log("ERROR",paste("error.code =",res$exit.code))}  
-	
-	### 
-	# proccessing Job 3
-	###
-	rciop.log("INFO", paste("processing Job 3 over ", rst.ref))  	
-	outFiles=paste(o.pOut,'/viMed',o.yIni:o.yEnd,'.',o.driver,sep='')
-	rgf.summary(o.vi,outFiles,fun='MEAN',drivername=o.driver,mvFlag=o.flag)		
-}
+rst.ref <- readLines(f, n=1)
+
+#retrieve local files and copy to TMPDIR
+rciop.log("INFO", paste("copy local file", rst.ref))    
+res <- rciop.copy(rst.ref, TMPDIR, uncompress=TRUE)
+if (res$exit.code==0) 
+{
+	rst.ref <- res$output
+	rciop.log("INFO", "Copied file.")  
+}	else {rciop.log("ERROR",paste("error.code =",res$exit.code))}  
+
+### 
+# proccessing Job 2
+###
+rciop.log("INFO", paste("processing Job 2 over ", rst.ref))  
+aux=readGDAL(rst.ref,silent=T)		
+outFiles=paste(o.pOut,'/rad',1:12,".",o.driver,sep='')
+solarRad12M(aux,outFiles,drivername=o.driver,mvFlag=o.flag)
 
 ###
 # PUBLISH OUTPUT
 ###
-rciop.log("INFO","publishing Monthly Radiations")  
+rciop.log("INFO","publishing Monthly Radiations")
+rciop.log("DEBUG", paste("outfiles: ", outFiles))
 # publish it
 res <- rciop.publish(outFiles, recursive=FALSE, metalink=TRUE)
 if (res$exit.code==0) { 

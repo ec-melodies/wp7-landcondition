@@ -1,0 +1,26 @@
+file format : IDRISI Raster A.1
+file title  : Window from NDV_2002_sep-mx c: 165 r: 55 to c: 272 r: 125
+data type   : byte
+file type   : binary
+columns     : 108
+rows        : 71
+ref. system : latlong
+ref. units  : deg
+unit dist.  : 1.0000000
+min. X      : -15.2187501
+max. X      : -14.2544644
+min. Y      : 15.2812501
+max. Y      : 15.9151786
+pos'n error : unknown
+resolution  : unknown
+min. value  : 76
+max. value  : 183
+display min : 76
+display max : 183
+value units : ndvi
+value error : unknown
+flag value  : none
+flag def'n  : none
+legend cats : 0
+lineage     : This file was created by the WINDOW module with the command line: 
+lineage     : D:\00_DATOS\MARIETA\DESURVEY_FERLOVS1\S10NDVI\validas\NDV_2002_sep-mx.rst*D:\00_DATOS\MARIETA\DESURVEY_FERLOVS1\R_pilot site\v-m-2002_sep-mx.rst*3*D:\00_DATOS\MARIETA\DESURVEY_FERLOVS1\R_pilot site\Site_assess9803.rst
