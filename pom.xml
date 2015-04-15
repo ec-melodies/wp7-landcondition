@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>eu.melodiesproject</groupId>
+	<artifactId>wp07-LC</artifactId>
+	<packaging>pom</packaging>
+	<name>wp07-LC</name>
+	<description>WP07 Desertification Indicators - Land Condition</description>
+	<version>1.0.4-SNAPSHOT</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>repository.terradue.com</id>
+			<name>repository.terradue.com-releases</name>
+			<url>http://repository.terradue.com/artifactory/libs-release-public</url>
+			<releases>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<snapshots />
+			<id>repository.terradue.com</id>
+			<name>repository.terradue.com-releases</name>
+			<url>http://repository.terradue.com/artifactory/libs-release-public</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<!-- clean previous installations -->
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>/application</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<excludes>
+      							<exclude>share/**</exclude>
+							</excludes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<!-- copy R sources -->
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>						
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/R/src/r2dRue</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/R/r2dRue</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>DESCRIPTION</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>${basedir}/src/main/R/r2dRue</directory>
+									<filtering>false</filtering>
+									<excludes>
+										<exclude>DESCRIPTION</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<!-- Compile & Install R library -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.3.1</version>
+				<executions>				
+					<execution>
+						<id>R compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>R</executable>
+							<workingDirectory>${project.build.directory}/R/src</workingDirectory>
+							<arguments>
+								<argument>CMD</argument>
+								<argument>build</argument>
+								<argument>--binary</argument>
+								<argument>r2dRue</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>R install</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>R</executable>
+							<workingDirectory>${project.build.directory}/R/src</workingDirectory>
+							<arguments>
+								<argument>CMD</argument>
+								<argument>INSTALL</argument>
+								<argument>-l</argument>
+								<argument>${project.build.directory}/R/lib/</argument>								
+								<argument>${project.build.directory}/R/src/r2dRue_${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.tar.gz</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>R install app</id>
+						<phase>install</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>R</executable>
+							<workingDirectory>${project.build.directory}/R/src</workingDirectory>
+							<arguments>
+								<argument>CMD</argument>
+								<argument>INSTALL</argument>
+								<argument>-l</argument>
+								<argument>/application/R/library</argument>
+								<argument>${project.build.directory}/R/src/r2dRue_${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.tar.gz</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-app-resources</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>/application</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/app-resources/</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>create target</id>
+						<phase>initialize</phase>
+						<configuration>
+							<target>								
+								<mkdir dir="${project.build.directory}/R/src" />
+								<mkdir dir="${project.build.directory}/R/lib" />
+								<mkdir dir="/application/R/library" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>change perm</id>
+						<phase>install</phase>
+						<configuration>
+							<target>
+								<chmod dir="/application" includes="**/run, **/bin/*, **/*.R" perm="755" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
