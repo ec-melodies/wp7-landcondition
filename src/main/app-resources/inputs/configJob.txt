@@ -1,0 +1,13 @@
+comment=Aplicacion 2dRUE en ventana del Ferlo
+viRgf=/application/inputs/NDVI/v-m-ndvi.rgf
+rainRgf=/application/inputs/RAIN/rain.rgf
+petRgf=/application/inputs/PET/pet.rgf
+mHidro=6
+acum=6
+pOut=D:/pilot_site
+sYear=1997
+sMonth=12
+yIni=1998
+yEnd=2002
+driver=TIFF
+flag=-999

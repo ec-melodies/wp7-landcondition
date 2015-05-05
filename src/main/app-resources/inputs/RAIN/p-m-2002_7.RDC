@@ -1,0 +1,26 @@
+file format : IDRISI Raster A.1
+file title  : Window from fe-p2002_7 c: 165 r: 55 to c: 272 r: 125
+data type   : real
+file type   : binary
+columns     : 108
+rows        : 71
+ref. system : latlong
+ref. units  : deg
+unit dist.  : 1.0000000
+min. X      : -15.2187504
+max. X      : -14.2544644
+min. Y      : 15.2812499
+max. Y      : 15.9151785
+pos'n error : unknown
+resolution  : 0.0083333
+min. value  : 14.3999996
+max. value  : 38.3300018
+display min : 14.3999996
+display max : 38.3300018
+value units : unspecified
+value error : unknown
+flag value  : none
+flag def'n  : none
+legend cats : 0
+lineage     : This file was created by the WINDOW module with the command line: 
+lineage     : D:\00_DATOS\MARIETA\DESURVEY_FERLOVS1\CLIMA\prec\fe-p2002_7.rst*D:\00_DATOS\MARIETA\DESURVEY_FERLOVS1\R_pilot site\p-m-2002_7.rst*3*D:\00_DATOS\MARIETA\DESURVEY_FERLOVS1\R_pilot site\Site_assess9803.rst

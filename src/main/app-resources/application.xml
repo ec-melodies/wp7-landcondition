@@ -1,59 +1,110 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <application id="WP7-Application">
-  <jobTemplates>
-    <jobTemplate id="TimeSeries">
-      <streamingExecutable>/application/J1-TimeSeries/run.R</streamingExecutable>
+  <jobTemplates>    
+    <jobTemplate id="ConfigJob">
+      <streamingExecutable>/application/J0-ConfigJob/run.R</streamingExecutable>
       <defaultParameters>
-        <parameter id="startYear" title="Start Year" abstract="Start year of de ndvi series" scope="runtime" type="opensearch" target="time:start">2012</parameter>
-        <parameter id="endYear" title="End Year" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>
+        <parameter id="comment" title="comment" abstract="Start year of de ndvi series" scope="runtime" type="opensearch" target="time:start">2000</parameter>
+        <parameter id="ndviList" title="Ndvi Files" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>
+        <parameter id="rainList" title="Rain Files" abstract="Start year of de ndvi series" scope="runtime" type="opensearch" target="time:start">2000</parameter>
+        <parameter id="petList" title="Pet Files" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>
+        <parameter id="mHidro" title="Hidrological Month" abstract="Start year of de ndvi series" scope="runtime" type="opensearch" target="time:start">2000</parameter>
+        <parameter id="acum" title="n. Acumulation Months" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>
+        <parameter id="sYear" title="Start Year of the Rain/Ndvi/Pet series" abstract="Start year of de ndvi series" scope="runtime" type="opensearch" target="time:start">2000</parameter>
+        <parameter id="sMonth" title="Start Year of the Rain/Ndvi/Pet series" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>
+        <parameter id="yIni" title="start Year of 2dRue analisis" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>
+        <parameter id="yEnd" title="End Year of 2dRue analisis" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>
+        <parameter id="driver" title="RGDAL drivers used in input and output files" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>
+        <parameter id="flag" title="RGDAL flag parameter used in input and output files" abstract="End year of the ndvi series" scope="runtime" type="opensearch" target="time:end">2014</parameter>        
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
       </defaultJobconf>
-    </jobTemplate>
-    <jobTemplate id="MonthlyRadiations">
-      <streamingExecutable>/application/J2-MonthlyRadiations/run.R</streamingExecutable>
-      <defaultParameters>
-        <parameter id="month" title="month" abstract="" scope="runtime">2012</parameter>
-        <parameter id="bbox" title="End Year" abstract="End datogue" scope="runtime">2014</parameter>
-      </defaultParameters>
-      <defaultJobconf>
-        <property id="mapred.task.timeout">600000000</property>
+    </jobTemplate>    
+    <jobTemplate id="monitoring">
+      <streamingExecutable>/application/J1-monitoring/run.R</streamingExecutable>
+      <defaultJobconf>      
+        <property id="ciop.job.max.tasks">1</property>
+      </defaultJobconf>
+    </jobTemplate>    
+    <jobTemplate id="rueObsMed">
+      <streamingExecutable>/application/J4-rueObsMed/run.R</streamingExecutable>
+      <defaultJobconf>        
         <property id="ciop.job.max.tasks">1</property>
       </defaultJobconf>
     </jobTemplate>
-    <jobTemplate id="NdviAnnualSeries">
-      <streamingExecutable>/application/J3-NdviAnnualSeries/run.R</streamingExecutable>
-      <defaultParameters>
-        <parameter id="startYear" title="start year" abstract="S catalogue" scope="runtime">1997</parameter>
-        <parameter id="endYear" title="end year" abstract="ndsat 8 catalogue" scope="runtime">2001</parameter>
-        <parameter id="bbox" title="End Year" abstract="End YEYEYEYEear datlogue" scope="runtime">2014</parameter>
-      </defaultParameters>
-      <defaultJobconf>
-        <property id="mapred.task.timeout">600000000</property>
+    <jobTemplate id="rueObsExt">
+      <streamingExecutable>/application/J5-rueObsExt/run.R</streamingExecutable>
+      <defaultJobconf>      
         <property id="ciop.job.max.tasks">1</property>
       </defaultJobconf>
     </jobTemplate>
+    <jobTemplate id="aiObsMed">
+      <streamingExecutable>/application/J6-aiObsMed/run.R</streamingExecutable>
+      <defaultJobconf>      
+        <property id="ciop.job.max.tasks">1</property>
+      </defaultJobconf>
+    </jobTemplate>
+    <jobTemplate id="aiObsExt">
+      <streamingExecutable>/application/J7-aiObsExt/run.R</streamingExecutable>
+      <defaultJobconf>      
+        <property id="ciop.job.max.tasks">1</property>
+      </defaultJobconf>
+    </jobTemplate>    
+    <jobTemplate id="aggregation">
+      <streamingExecutable>/application/J9-aggregation/run.R</streamingExecutable>
+      <defaultJobconf>      
+        <property id="ciop.job.max.tasks">1</property>
+      </defaultJobconf>
+    </jobTemplate>        
   </jobTemplates>
-  <workflow id="WP7_Debug_Workflow" title="WP7 - Land Condition pruebas" abstract="Prueba del WP7">
-    <workflowVersion>1.0</workflowVersion>
-    <node id="node_TimeSeries">
-      <job id="TimeSeries" />
+  <workflow id="WP7_v3_Workflow" title="WP7 - Land Condition v2" abstract="Prueba del WP7">
+    <workflowVersion>1.0</workflowVersion>    
+    <node id="node_ConfigJob">
+      <job id="ConfigJob" />
       <sources>
-        <source refid="file:urls">/application/inputs/J1-TimeSeries/list</source>
+        <source refid="file:urls">/application/inputs/configJob.txt</source>
+      </sources>
+    </node>    
+    <node id="node_rueObsMed">
+      <job id="rueObsMed" />
+      <sources>
+        <source refid="wf:node">node_ConfigJob</source>        
       </sources>
     </node>
-    <node id="node_MonthlyRadiations">
-      <job id="MonthlyRadiations" />
+    <node id="node_rueObsExt">
+      <job id="rueObsExt" />
       <sources>
-        <source refid="file:urls">/application/inputs/J1-TimeSeries/list</source>
+        <source refid="wf:node">node_ConfigJob</source>        
       </sources>
     </node>
-    <node id="node_NdviAnnualSeries">
-      <job id="NdviAnnualSeries" />
+    <node id="node_aiObsMed">
+      <job id="aiObsMed" />
       <sources>
-        <source refid="file:urls">/application/inputs/NDVI/v-m-ndvi.rgf</source>
+        <source refid="wf:node">node_ConfigJob</source>        
       </sources>
     </node>
+    <node id="node_aiObsExt">
+      <job id="aiObsExt" />
+      <sources>
+        <source refid="wf:node">node_ConfigJob</source>        
+      </sources>
+    </node>   
+    <node id="node_monitoring">
+      <job id="monitoring" />
+      <sources>        
+        <source refid="wf:node">node_ConfigJob</source>                
+      </sources>
+    </node>       
+    <node id="node_aggregation">
+      <job id="aggregation" />
+      <sources>
+        <source refid="wf:node">node_monitoring</source>        
+        <source refid="wf:node">node_rueObsMed</source>        
+        <source refid="wf:node">node_rueObsExt</source>        
+        <source refid="wf:node">node_aiObsMed</source>        
+        <source refid="wf:node">node_aiObsExt</source>        
+      </sources>
+    </node>   
   </workflow>
 </application>

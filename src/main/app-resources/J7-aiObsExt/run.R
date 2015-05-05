@@ -1,8 +1,8 @@
 #!/usr/bin/Rscript --vanilla --slave --quiet -ee
 
 ################## 
-### WP7LC - JOB 5 
-### CALCULATE RUE OBSERVADO EXTREMO
+### WP7LC - JOB 7 
+### CALCULATE INDICE DE ARIDEZ OBSERVADO EXTREMO
 ###  
 ### INPUTS    : o OBJECTS
 ### OUTPUTS   : 
@@ -72,11 +72,11 @@ o$driver="GTiff"
 ###
 
 # set outfiles
-outFiles=paste(o$pOut,'/rueObsExt','.',o$driver,sep='')
+outFiles=paste(o$pOut,'/aiObsExt','.',o$driver,sep='')
 # call function
-rueEx=rueObsEx(o$rain,o$vi,o$prain,nMonths=o$acum)
+iaEx=aiObsEx(o$rain,o$vi,o$pet,o$prain,o$ppet,nMonths=o$acum)	
 # write output
-writeGDAL(rueEx, outFiles, drivername = o$driver, mvFlag = o$flag)
+writeGDAL(iaEx, outFiles, drivername = o$driver, mvFlag = o$flag)
 
 ###
 # PUBLISH OUTPUT

@@ -1,8 +1,8 @@
 #!/usr/bin/Rscript --vanilla --slave --quiet -ee
 
 ################## 
-### WP7LC - JOB 5 
-### CALCULATE RUE OBSERVADO EXTREMO
+### WP7LC - JOB 4 
+### CALCULATE RUE OBSERVADO MEDIO
 ###  
 ### INPUTS    : o OBJECTS
 ### OUTPUTS   : 
@@ -72,11 +72,11 @@ o$driver="GTiff"
 ###
 
 # set outfiles
-outFiles=paste(o$pOut,'/rueObsExt','.',o$driver,sep='')
+outFiles=paste(o$pOut,'/rueObsMed','.',o$driver,sep='')
 # call function
-rueEx=rueObsEx(o$rain,o$vi,o$prain,nMonths=o$acum)
+rueMe=rueObsMe(o$rain,o$vi, silent=T)		
 # write output
-writeGDAL(rueEx, outFiles, drivername = o$driver, mvFlag = o$flag)
+writeGDAL(rueMe, outFiles, drivername = o$driver, mvFlag = o$flag)
 
 ###
 # PUBLISH OUTPUT
