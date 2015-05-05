@@ -9,5 +9,5 @@ sYear=1997
 sMonth=12
 yIni=1998
 yEnd=2002
-driver=TIFF
+driver=GTiff
 flag=-999
