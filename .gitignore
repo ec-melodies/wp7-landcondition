@@ -15,4 +15,4 @@ target
 *.bak
 
 # raster files
-*.rst
+# *.rst
